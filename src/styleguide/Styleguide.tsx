@@ -59,9 +59,9 @@ const roleGroups: { group: string; roles: [string, string, string][] }[] = [
 ]
 
 const typeRoles: [string, string, string][] = [
-  ['headline-lg', '32/40 · 700 · −2%', 'Find your next obsession'],
-  ['headline-md', '28/36 · 700 · −2%', 'Find your next obsession'],
-  ['headline-sm', '24/32 · 700 · −2%', 'Not on the FM.'],
+  ['headline-lg', '32/40 · 600 · −2% · Clash Grotesk', 'Find your next obsession'],
+  ['headline-md', '28/36 · 600 · −2% · Clash Grotesk', 'Find your next obsession'],
+  ['headline-sm', '24/32 · 600 · −2% · Clash Grotesk', 'Not on the FM.'],
   ['title-md', '16/24 · 600', 'Made for Misugla'],
   ['title-sm', '13/18 · 500', 'After Hours'],
   ['body-lg', '16/26 · 400', 'The scene was never about the DJ. It was the room, the heat, the moment a track lands.'],
@@ -424,7 +424,7 @@ export function Styleguide() {
         </div>
       </Section>
 
-      <Section id="type" title="Type" intro="Inter, mapped to M3 roles. headline-md replaces headline-lg at compact. body-lg is new, for long-form Culture stories.">
+      <Section id="type" title="Type" intro="Clash Grotesk for headlines, Inter for everything else, mapped to M3 roles. headline-md replaces headline-lg at compact. body-lg is new, for long-form Culture stories.">
         <div className="sg-type">
           {typeRoles.map(([name, spec, sample]) => (
             <div key={name} className="sg-type__row">

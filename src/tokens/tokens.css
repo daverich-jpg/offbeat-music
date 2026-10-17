@@ -104,17 +104,14 @@
   --shape-xxl: 48px;
   --shape-full: 999px; /* chips, buttons, avatars */
 
-  /* ════════ Typography (M3 roles, Inter) ════════ */
+  /* ════════ Typography (M3 roles: Clash Grotesk headlines, Inter everything else) ════════ */
   --font-display: 'Clash Grotesk', 'Inter', ui-sans-serif, system-ui, sans-serif;
---font-brand: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-brand: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-plain: var(--font-brand);
 
---type-headline-lg: 600 32px/40px var(--font-display);
---type-headline-md: 600 28px/36px var(--font-display);
---type-headline-sm: 600 24px/32px var(--font-display);
-
-  --type-headline-lg: 700 32px/40px var(--font-brand); /* page + hero headlines */
-  --type-headline-md: 700 28px/36px var(--font-brand); /* page headline at compact */
-  --type-headline-sm: 700 24px/32px var(--font-brand); /* promo, dialog headline */
+  --type-headline-lg: 600 32px/40px var(--font-display); /* page + hero headlines */
+  --type-headline-md: 600 28px/36px var(--font-display); /* page headline at compact */
+  --type-headline-sm: 600 24px/32px var(--font-display); /* promo, dialog headline */
   --type-title-md: 600 16px/24px var(--font-plain); /* section headers, card titles */
   --type-title-sm: 500 13px/18px var(--font-plain); /* list item titles */
   --type-body-lg: 400 16px/26px var(--font-plain); /* long-form reading (Culture stories) */
