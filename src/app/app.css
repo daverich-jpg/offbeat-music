@@ -1,0 +1,198 @@
+/* Offbeat app: layout, loading illusions and transitions. Components come from the design system. */
+
+html, body { height: 100%; overflow: hidden; }
+
+/* ─── Shell: one scroller, so the sheet, mini player and snackbar sit above it ─── */
+.app { position: fixed; inset: 0; container: app / inline-size; }
+.app__scroll { height: 100%; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; }
+/* flex: 1 0 auto: grow to fill, never shrink below the content, or sticky columns lose their track. */
+.app__layout { flex: 1 0 auto; display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; }
+.app[data-player] .app__layout { padding-bottom: 72px; }
+
+.app__sidebar, .app__rail { display: none; }
+.app__main { padding: var(--space-4) var(--layout-margin-compact) var(--space-8); display: grid; gap: var(--space-6); min-width: 0; }
+.app__aside { padding: 0 var(--layout-margin-compact) var(--space-8); display: grid; gap: var(--space-6); align-content: start; }
+.rail__repeat { display: grid; gap: var(--space-2); }
+.app__navbar { position: sticky; bottom: 0; z-index: 5; }
+
+.app__player { position: absolute; left: 0; right: 0; bottom: var(--layout-navbar); z-index: 10; animation: app-player-in var(--motion-spatial-default) both; }
+@keyframes app-player-in { from { transform: translateY(140%); } }
+.app[data-player] .ob-snackbar { bottom: calc(var(--layout-navbar) + 72px); }
+.app__dock { display: none; }
+
+@container app (min-width: 600px) {
+  .app__layout { grid-template-columns: var(--layout-rail-nav) minmax(0, 1fr); }
+  .app__navbar { display: none; }
+  .app__rail { display: block; position: sticky; top: 0; grid-row: span 2; }
+  .app__main { padding: var(--space-10) var(--layout-margin) var(--space-8) var(--space-2); }
+  .app__aside { grid-column: 2; padding: 0 var(--layout-margin) var(--space-10) var(--space-2); }
+  .app__player { left: calc(var(--layout-rail-nav) + var(--space-2)); right: auto; bottom: var(--space-4); width: min(440px, calc(100% - var(--layout-rail-nav) - var(--space-8))); }
+  .app__player .ob-mini-player { margin: 0; }
+  .app[data-player] .ob-snackbar { bottom: 96px; }
+}
+@container app (min-width: 840px) {
+  .app__aside { grid-template-columns: 1fr 1fr; align-items: start; }
+  /* Docked bar replaces the floating mini player. */
+  .app__player { display: none; }
+  .app__dock { display: block; position: absolute; left: 0; right: 0; bottom: 0; z-index: 10; animation: app-player-in var(--motion-spatial-default) both; }
+  .app[data-player] .app__layout { padding-bottom: 80px; }
+  .app[data-player] .app__rail { height: calc(100dvh - 80px); }
+  .app[data-player] .ob-snackbar { bottom: 96px; }
+}
+@container app (min-width: 1200px) {
+  .app__layout { grid-template-columns: var(--layout-sidebar) minmax(0, 1fr) var(--layout-aside); }
+  .app__rail { display: none; }
+  .app__sidebar { display: block; position: sticky; top: 0; height: 100cqh; height: 100dvh; padding: var(--space-10) var(--space-3); border-right: 1px solid var(--color-outline-variant); }
+  .app__main { padding: var(--space-10) var(--layout-margin); }
+  .app__aside {
+    grid-column: 3;
+    grid-row: 1;
+    position: sticky;
+    top: 0;
+    min-height: 100dvh;
+    grid-template-columns: 1fr;
+    padding: var(--space-10) var(--space-5);
+    border-left: 1px solid var(--color-outline-variant);
+  }
+  .app[data-player] .app__sidebar { height: calc(100dvh - 80px); }
+  .app[data-player] .app__aside { min-height: calc(100dvh - 80px); }
+}
+
+/* ─── Top bar ─── */
+.topbar { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); position: relative; z-index: 20; }
+.topbar__actions { display: flex; align-items: center; gap: var(--space-3); }
+
+/* ─── Search: focal dampening + instant local results ─── */
+.search { position: relative; flex: 0 1 360px; min-width: 0; }
+.search__panel {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  left: 0;
+  width: max(100%, 380px);
+  max-width: calc(100cqw - 2 * var(--layout-margin-compact));
+  padding: var(--space-2);
+  border-radius: var(--shape-md);
+  background: var(--color-surface-container-highest);
+  box-shadow: var(--elevation-2);
+  transform-origin: top left;
+  animation: ob-menu-in var(--motion-enter) both;
+}
+.search__head { display: flex; justify-content: space-between; align-items: center; padding: var(--space-1) var(--space-2) var(--space-2); }
+.search__list { list-style: none; margin: 0; padding: 0; }
+.search__option { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-2); border-radius: var(--shape-sm); cursor: pointer; }
+.search__option[aria-selected='true'] { background: rgb(231 232 232 / var(--state-hover)); }
+.search__icon { display: grid; place-items: center; width: 36px; height: 36px; border-radius: var(--shape-sm); background: var(--color-surface-container-high); color: var(--color-on-surface-variant); flex: none; }
+.search__icon > svg { width: 16px; height: 16px; }
+.search__text { display: grid; min-width: 0; }
+.search__title { color: var(--color-on-surface); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.search__empty { padding: var(--space-3) var(--space-2); }
+.search__trending { display: grid; gap: var(--space-2); padding: var(--space-3) var(--space-2) var(--space-1); }
+.search__trending .ob-label-sm { display: inline-flex; align-items: center; gap: var(--space-1); }
+.search__trending svg { width: 14px; height: 14px; }
+
+.app__content, .app__aside { transition: opacity var(--motion-effects-default), filter var(--motion-effects-default); }
+.app[data-searching] .app__content,
+.app[data-searching] .app__aside { opacity: 0.3; filter: blur(3px) saturate(0.6); }
+
+/* ─── Notifications ─── */
+.notif { position: relative; }
+.notif__panel {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  right: calc(var(--space-10) * -1 - var(--space-3));
+  width: min(340px, calc(100cqw - 32px));
+  padding: var(--space-2) var(--space-2) var(--space-3);
+  border-radius: var(--shape-md);
+  background: var(--color-surface-container-highest);
+  box-shadow: var(--elevation-2);
+  transform-origin: top right;
+  animation: ob-menu-in var(--motion-enter) both;
+}
+.notif__head { display: flex; align-items: center; justify-content: space-between; padding-left: var(--space-2); }
+.notif__item { display: grid; gap: 2px; padding: var(--space-3) var(--space-2); border-top: 1px solid var(--color-outline-variant); }
+.notif__title { color: var(--color-on-surface); }
+
+/* ─── Discover ─── */
+.discover { display: grid; gap: var(--space-6); }
+.discover__intro { display: grid; gap: var(--space-1); }
+.discover__title { font: var(--type-headline-md); letter-spacing: var(--tracking-tight); }
+.discover__chips { margin-top: var(--space-3); flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: calc(var(--layout-margin-compact) * -1); padding: var(--space-2) var(--layout-margin-compact); }
+.discover__feed { transition: opacity var(--motion-effects-default); }
+.discover__feed[data-dimmed] { opacity: 0.45; }
+.discover__reveal { display: grid; gap: var(--space-6); }
+.discover__grid { display: grid; grid-auto-flow: column; grid-auto-columns: 72%; gap: var(--space-3); overflow-x: auto; scrollbar-width: none; margin: calc(var(--space-2) * -1) calc(var(--layout-margin-compact) * -1) 0; padding-inline: var(--layout-margin-compact); scroll-snap-type: x mandatory; scroll-padding-inline: var(--layout-margin-compact); }
+.discover__grid > * { scroll-snap-align: start; }
+.discover__error { display: grid; justify-items: start; gap: var(--space-3); padding: var(--space-8) 0; }
+.discover__play { display: grid; place-items: center; width: 40px; height: 40px; border-radius: var(--shape-full); background: var(--color-primary); color: var(--color-on-primary); box-shadow: var(--elevation-2); }
+.discover__play > svg { width: 16px; height: 16px; margin-left: 2px; }
+.discover__play > .ob-eq { color: var(--color-on-primary); }
+
+/* Hero photo: 'fill' is full-bleed like the design; 'side' anchors a smaller photo right and fades it in. */
+.discover__hero-media { position: absolute; inset: 0; }
+.discover__hero-media[data-fit='side'] {
+  left: auto;
+  width: min(64%, 560px);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 30%);
+  mask-image: linear-gradient(90deg, transparent, #000 30%);
+}
+@container (max-width: 520px) {
+  .discover__hero-media[data-fit='side'] { left: 0; width: auto; -webkit-mask-image: none; mask-image: none; }
+}
+
+@container app (min-width: 600px) {
+  .discover__title { font: var(--type-headline-lg); letter-spacing: var(--tracking-tight); }
+  .discover__chips { flex-wrap: wrap; overflow: visible; margin-inline: 0; padding-inline: 0; }
+  .discover__grid { grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: calc(var(--space-2) * -1) 0 0; padding: 0; overflow: visible; gap: var(--space-4); }
+}
+
+/* Staggered reveal: only when content arrives after a wait ("rise"), or a quick fade when a cached feed swaps in. */
+.discover__reveal[data-animate='rise'] > :not(.discover__grid),
+.discover__reveal[data-animate='rise'] > .discover__grid > * { animation: app-rise var(--motion-enter) both; animation-delay: calc(var(--i, 0) * 50ms); }
+.discover__reveal[data-animate='swap'] { animation: app-fade var(--motion-effects-default) both; }
+@keyframes app-rise { from { opacity: 0; transform: translateY(12px); } }
+@keyframes app-fade { from { opacity: 0; } }
+
+/* ─── Skeletons: same geometry as the real thing, shimmer sweeps left to right ─── */
+.skel { position: relative; display: block; overflow: hidden; border-radius: 6px; background: var(--color-surface-container-high); }
+.skel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgb(255 255 255 / 0.05) 50%, transparent 100%);
+  transform: translateX(-100%);
+  animation: app-shimmer 1.4s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * 90ms);
+}
+@keyframes app-shimmer { to { transform: translateX(100%); } }
+.skel--hero { min-height: 286px; border-radius: var(--shape-lg); padding: var(--space-6); display: grid; align-content: start; gap: var(--space-2); background: var(--color-surface-container-low); }
+.skel--hero > .skel, .skel--card > .skel { background: var(--color-surface-container-highest); }
+.skel--card { display: grid; gap: var(--space-2); padding: var(--space-3); border-radius: var(--shape-lg); }
+.skel--art { aspect-ratio: 217 / 180; border-radius: var(--shape-md); margin-bottom: var(--space-1); }
+.rail__skel { align-items: center; }
+@media (prefers-reduced-motion: reduce) { .skel::after { animation: none; } }
+
+/* ─── Story ─── */
+.story { display: grid; gap: var(--space-6); }
+.story__bar { display: flex; align-items: center; gap: var(--space-2); margin-left: calc(var(--space-2) * -1); }
+.story__bar-actions { margin-left: auto; display: flex; }
+.story__hero { position: relative; isolation: isolate; min-height: 380px; border-radius: var(--shape-lg); overflow: hidden; display: flex; align-items: flex-end; padding: var(--space-6); }
+.story__hero::before { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--scrim-media-compact); }
+.story__media { position: absolute; inset: 0; z-index: -2; }
+.story__headline { font: var(--type-headline-lg); line-height: 1.55; letter-spacing: var(--tracking-tight); margin: 0; }
+.story__headline > span { display: block; }
+/* Header spans the column; the reading text sits centred beneath it at a comfortable measure. */
+.story__meta { display: grid; gap: var(--space-2); width: 100%; max-width: 680px; margin-inline: auto; }
+.story__dek { color: var(--color-on-surface); font-weight: 500; }
+.story__body { display: grid; gap: var(--space-5); width: 100%; max-width: 680px; margin-inline: auto; }
+.story__para { color: var(--color-on-surface); animation: app-rise var(--motion-enter) both; animation-delay: calc(var(--i, 0) * 40ms); }
+.story__skeleton { display: grid; gap: var(--space-3); }
+/* From expanded up the header fills the column; height tracks the window so it stays a header, not a wall. */
+@container app (min-width: 840px) { .story__hero { min-height: 0; height: clamp(380px, 34cqw, 520px); padding: var(--space-8); } }
+
+/* ─── View transitions: the hero morphs into the story header ─── */
+::view-transition-group(story-media),
+::view-transition-group(story-title) { animation-duration: 500ms; animation-timing-function: cubic-bezier(0.38, 1.21, 0.22, 1); }
+::view-transition-old(story-media),
+::view-transition-new(story-media) { width: 100%; height: 100%; object-fit: cover; animation-duration: 250ms; }
+::view-transition-old(root),
+::view-transition-new(root) { animation-duration: 220ms; }

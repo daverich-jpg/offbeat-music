@@ -1,0 +1,178 @@
+/* Offbeat design tokens.
+   Structure follows Material 3 (color roles, state layers, elevation, shape scale,
+   type roles, spring motion). Values are Offbeat's own: primitives are pixel-sampled
+   from Figma node 1277:184; anything not in the source is marked "derived".
+   Components read only the system layer (everything below Primitives). */
+
+:root {
+  /* ════════ Primitives ════════ */
+
+  /* Graphite: neutral ground, cool-leaning */
+  --graphite-1000: #000000;
+  --graphite-950: #0c0d0e; /* derived */
+  --graphite-900: #131416; /* sampled: canvas */
+  --graphite-875: #1a1b1d; /* derived */
+  --graphite-850: #1f2023; /* derived */
+  --graphite-800: #26292d; /* sampled: cards, chips */
+  --graphite-750: #262729; /* sampled: dividers */
+  --graphite-700: #303338; /* derived */
+  --graphite-500: #424345; /* sampled: muted text on lime */
+  --graphite-400: #7a7b7e; /* derived: 3:1 outline */
+  --graphite-300: #a1a1a2; /* sampled: secondary text */
+  --graphite-100: #e7e8e8; /* sampled: primary text */
+  --graphite-50: #fdfdfd; /* sampled: nav labels */
+
+  /* Volt: the single accent */
+  --volt-500: #cbf558; /* sampled */
+  --volt-300: #e4fba6; /* derived */
+  --volt-700: #4a5c0f; /* derived: inverse primary */
+  --volt-950: #293112; /* sampled: active nav, icon button */
+
+  /* Signal: error only (M3 baseline dark error tones) */
+  --signal-200: #ffb4ab;
+  --signal-100: #ffdad6;
+  --signal-800: #93000a;
+  --signal-900: #690005;
+
+  /* ════════ Color roles (M3) ════════ */
+
+  --color-primary: var(--volt-500);
+  --color-on-primary: var(--graphite-900);
+  --color-on-primary-variant: var(--graphite-500); /* Offbeat add-on: secondary text on lime */
+  --color-primary-container: var(--volt-950);
+  --color-on-primary-container: var(--graphite-50);
+
+  /* Secondary is neutral on purpose: Offbeat has one accent. */
+  --color-secondary-container: var(--graphite-800);
+  --color-on-secondary-container: var(--graphite-100);
+
+  --color-error: var(--signal-200);
+  --color-on-error: var(--signal-900);
+  --color-error-container: var(--signal-800);
+  --color-on-error-container: var(--signal-100);
+
+  --color-surface: var(--graphite-900);
+  --color-surface-container-lowest: var(--graphite-950);
+  --color-surface-container-low: var(--graphite-875);
+  --color-surface-container: var(--graphite-850);
+  --color-surface-container-high: var(--graphite-800);
+  --color-surface-container-highest: var(--graphite-700);
+  --color-on-surface: var(--graphite-100);
+  --color-on-surface-variant: var(--graphite-300);
+
+  --color-outline: var(--graphite-400);
+  --color-outline-variant: var(--graphite-750);
+
+  --color-inverse-surface: var(--graphite-100);
+  --color-inverse-on-surface: var(--graphite-900);
+  --color-inverse-primary: var(--volt-700);
+
+  --color-scrim: rgb(0 0 0 / 0.6);
+  --color-shadow: var(--graphite-1000);
+
+  /* Scrim for copy over photography */
+  --scrim-media: linear-gradient(90deg, rgb(19 20 22 / 0.88) 0%, rgb(19 20 22 / 0.55) 40%, rgb(19 20 22 / 0) 70%);
+  --scrim-media-compact: linear-gradient(0deg, rgb(19 20 22 / 0.92) 0%, rgb(19 20 22 / 0.5) 55%, rgb(19 20 22 / 0) 100%);
+
+  /* ════════ State layers (M3) ════════ */
+  --state-hover: 0.08;
+  --state-focus: 0.1;
+  --state-pressed: 0.1;
+  --state-dragged: 0.16;
+  --state-disabled-content: 0.38;
+  --state-disabled-container: 0.12;
+
+  /* ════════ Elevation (M3 levels; dark-tuned shadows) ════════
+     Resting surfaces are level 0 and use tone, never shadow.
+     Shadows are reserved for things that float over content. */
+  --elevation-0: none;
+  --elevation-1: 0 1px 2px rgb(0 0 0 / 0.5), 0 1px 3px 1px rgb(0 0 0 / 0.3);
+  --elevation-2: 0 1px 2px rgb(0 0 0 / 0.5), 0 2px 6px 2px rgb(0 0 0 / 0.3);
+  --elevation-3: 0 1px 3px rgb(0 0 0 / 0.5), 0 4px 8px 3px rgb(0 0 0 / 0.3);
+  --elevation-4: 0 2px 3px rgb(0 0 0 / 0.5), 0 6px 10px 4px rgb(0 0 0 / 0.3);
+  --elevation-5: 0 4px 4px rgb(0 0 0 / 0.5), 0 8px 12px 6px rgb(0 0 0 / 0.3);
+
+  /* ════════ Shape (M3 corner scale) ════════ */
+  --shape-none: 0;
+  --shape-xs: 4px;
+  --shape-sm: 8px; /* nav items, promo panel, fields */
+  --shape-md: 12px; /* card artwork, menus */
+  --shape-lg: 16px; /* cards, hero */
+  --shape-lg-increased: 20px;
+  --shape-xl: 28px; /* dialogs, sheets */
+  --shape-xl-increased: 32px;
+  --shape-xxl: 48px;
+  --shape-full: 999px; /* chips, buttons, avatars */
+
+  /* ════════ Typography (M3 roles, Inter) ════════ */
+  --font-brand: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-plain: var(--font-brand);
+
+  --type-headline-lg: 700 32px/40px var(--font-brand); /* page + hero headlines */
+  --type-headline-md: 700 28px/36px var(--font-brand); /* page headline at compact */
+  --type-headline-sm: 700 24px/32px var(--font-brand); /* promo, dialog headline */
+  --type-title-md: 600 16px/24px var(--font-plain); /* section headers, card titles */
+  --type-title-sm: 500 13px/18px var(--font-plain); /* list item titles */
+  --type-body-lg: 400 16px/26px var(--font-plain); /* long-form reading (Culture stories) */
+  --type-body-md: 400 14px/20px var(--font-plain); /* default body */
+  --type-body-sm: 400 12px/16px var(--font-plain); /* meta, supporting text */
+  --type-label-lg: 500 14px/20px var(--font-plain); /* buttons, tabs, chips */
+  --type-label-md: 500 12px/16px var(--font-plain); /* nav bar labels, badges */
+  --type-label-sm: 400 11px/16px var(--font-plain); /* section labels, genres, read time */
+
+  --tracking-tight: -0.02em; /* headline roles only */
+
+  /* ════════ Space (4pt) ════════ */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+
+  /* ════════ Sizes ════════ */
+  --size-target: 48px; /* minimum interactive target (M3) */
+  --size-control-sm: 30px; /* chips */
+  --size-control-md: 38px; /* buttons */
+  --size-control-lg: 40px; /* icon buttons, avatar */
+  --size-field: 52px; /* text fields */
+  --size-icon: 18px;
+  --size-icon-lg: 24px; /* nav bar, nav rail */
+  --size-thumb: 32px;
+
+  /* ════════ Layout ════════
+     Breakpoints (M3): compact <600 · medium 600–839 · expanded 840–1199 · large 1200–1599 · xl 1600+
+     CSS can't read variables in media queries; these mirror src/tokens/breakpoints.ts. */
+  --layout-sidebar: 158px; /* large+ */
+  --layout-rail-nav: 80px; /* medium, expanded */
+  --layout-aside: 320px; /* large+ right column */
+  --layout-margin-compact: 16px;
+  --layout-margin: 24px;
+  --layout-navbar: 72px; /* compact bottom bar */
+
+  /* ════════ Motion (M3 springs, web curve conversions) ════════
+     Spatial = position/size/shape, overshoots. Effects = color/opacity, no overshoot. */
+  --motion-spatial-fast: 350ms cubic-bezier(0.42, 1.67, 0.21, 0.9);
+  --motion-spatial-default: 500ms cubic-bezier(0.38, 1.21, 0.22, 1);
+  --motion-spatial-slow: 650ms cubic-bezier(0.39, 1.29, 0.35, 0.98);
+  --motion-effects-fast: 150ms cubic-bezier(0.31, 0.94, 0.34, 1);
+  --motion-effects-default: 200ms cubic-bezier(0.34, 0.8, 0.34, 1);
+  --motion-effects-slow: 300ms cubic-bezier(0.34, 0.88, 0.34, 1);
+  /* Enter/exit transitions (M3 easing set, still used for transitions) */
+  --motion-enter: 400ms cubic-bezier(0.05, 0.7, 0.1, 1);
+  --motion-exit: 200ms cubic-bezier(0.3, 0, 0.8, 0.15);
+
+  color-scheme: dark;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-spatial-fast: 1ms linear;
+    --motion-spatial-default: 1ms linear;
+    --motion-spatial-slow: 1ms linear;
+    --motion-enter: 150ms linear;
+    --motion-exit: 100ms linear;
+  }
+}
